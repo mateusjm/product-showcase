@@ -23,7 +23,7 @@ A maior dificuldade foi manter os Pokémon favoritos persistidos após recarrega
 Com mais tempo, eu refinaria o visual, principalmente animações e pequenos ajustes de responsividade. Também adicionaria skeletons de carregamento e detalhes de UI para tornar a experiência mais fluida e agradável.
 
 
-<h2>Seção 3: Link para Deploy (Bônus)</h2>
+<h2>Seção 3: Link para Deploy</h2>
 
 Projeto hospedado:<br/>
 https://product-showcase-kappa-lake.vercel.app/
