@@ -10,6 +10,16 @@ export const pokemonService = {
       throw error;
     }
   },
+
+  getById: async (id: string) => {
+    try {
+      const res = await useHttp.get(`${id}`);
+      return res.data;
+    } catch (error) {
+      console.log("Erro ao obter o pokemon", error);
+      throw error;
+    }
+  },
 };
 
 export default pokemonService;
