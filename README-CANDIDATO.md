@@ -25,8 +25,8 @@ Com mais tempo, eu refinaria o visual, principalmente animações e pequenos aju
 
 <h2>Seção 3: Link para Deploy (Bônus)</h2>
 
-Projeto hospedado (exemplo):<br/>
-https://meu-pokedex-react.netlify.app
+Projeto hospedado:<br/>
+https://product-showcase-kappa-lake.vercel.app/
 
 
 <b>Explicação dos Bônus Implementados:</b><br/>
