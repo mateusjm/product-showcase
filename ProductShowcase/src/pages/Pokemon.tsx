@@ -21,10 +21,11 @@ function Pokemon() {
     loadPokemon();
   }, [id]);
 
-  if (!pokemon) return <Loading />;
+  if (!pokemon) return <Loading message="Buscando Pokémon..." />;
 
   return (
     <PokemonDetails
+      id={pokemon.id}
       name={pokemon.name}
       imageUrl={getPokemonImage(pokemon.id)}
       types={getPokemonTypes(pokemon)}

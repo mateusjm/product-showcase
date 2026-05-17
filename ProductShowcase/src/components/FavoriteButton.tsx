@@ -9,13 +9,19 @@ interface Props {
 export default function FavoriteButton({ isFavorite, onToggle }: Props) {
   return (
     <button
+      type="button"
       onClick={onToggle}
-      className="absolute top-2 right-2 text-[2rem] cursor-pointer bg-transparent border-none"
+      aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+      className={`absolute right-2 top-2 z-10 flex h-9 w-9 items-center justify-center rounded-full border-none transition-all duration-200 ${
+        isFavorite
+          ? "bg-amber-50 text-amber-400 shadow-sm hover:scale-110 hover:bg-amber-100"
+          : "bg-white/80 text-slate-300 shadow-sm backdrop-blur-sm hover:scale-110 hover:bg-white hover:text-amber-300"
+      }`}
     >
       {isFavorite ? (
-        <FaStar className="text-yellow-400" />
+        <FaStar className="text-lg drop-shadow-sm" />
       ) : (
-        <FiStar className="text-gray-200" />
+        <FiStar className="text-lg" />
       )}
     </button>
   );
