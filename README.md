@@ -1,65 +1,184 @@
-* IMPORTANTE: Não inicie este desafio sem autorização. O desafio só poderá ser iniciado no dia e horário agendado via Google Meet. Entre em contato via email ou whatsapp:
-  - administrativo@infinixassessoria.com.br
-  - (21) 99515-2411
+# Pokédex
 
-# DESAFIO FRONT-END
+## Contexto
 
-## Sobre
-**Stack**: React + TypeScript + Axios + TailwindCSS
-**API Externa**: PokeAPI.co (https://pokeapi.co/)
-**Escopo**: Uma Pokedéx online.
+Este projeto foi desenvolvido no âmbito de um **desafio técnico front-end**, com o objetivo de construir uma aplicação web completa: consumo de API externa, navegação entre telas, tipagem em TypeScript, interface responsiva e recursos adicionais de usabilidade.
 
-## Requisitos Essenciais (Timebox 4h)
+O escopo previa uma **Pokédex online** — catálogo da primeira geração (151 Pokémon) — integrada à [PokéAPI](https://pokeapi.co/), servindo como vitrine de produto (*product showcase*) e demonstração de boas práticas em React.
 
-1. Estrutura de Pastas: A estrutura deve ser organizada. Não é sobre **qual** estrutura, mas se ela é consistente e se você consegue justificá-la (posteriormente via README-CANDIDATO).
-2. Consumo de API: Crie um serviço de API que usa *axios* para interagir com os endpoints.
-3. Tipagem (TypeScript): Crie interfaces para tipar os dados recebidos da API. O uso de *any* deve ser evitado.
-4. Tela 1: Home (/) — A lista de Pokémon
-    - Buscar a lista inicial de Pokémons com limite de 151.
-    - Renderizar um grid responsivo usando **TailwindCSS** para exibir os Pokémons.
-    - Cada card no grid deve ser clicável e exibir o nome do Pokémon e sua imagem.
-    - Ponto de Avaliação Chave: O endpoint de lista *não* retorna a imagem do Pokémon, apenas o nome e uma url de detalhes. Encontre uma solução para esse problema.
-5. Tela 2: Detalhes (/pokemon/:name) — A tela de detalhes
-    - Configure o ```react-router-dom``` para criar uma rota dinâmica.
-    - Clicar em um card na "Home", leva o usuário para "Detalhes".
-    - Nessa tela, uma nova chamada de API deve ser feita parra buscar os dados completos do Pokémon.
-    - Exiba o **nome**, a imagem **oficial**, os **tipos**, a **altura** e o **peso** do Pokémon.
-6. Estados de UI: A tela Home deve exibir um indicador de carregamento enquanto os dados estão sendo buscados.
+O código-fonte está em `ProductShowcase/`.
 
-#### Bônus (Desejáveis):
-    - Hospedagem: Faça deploy do site estático e cole o link no README-CANDIDATO.md.
-    - Filtro: Adicione um campo de <input> na tela Home que filtra a lista de Pokémon por nome (no lado do cliente)
-    - Contexto: Use a Context API para criar um "Time Pokémon", permitindo ao usuário "favoritar" até 6 Pokémon, e exibir os favoritos em algum lugar do site.
-    - Cache: Adicione uma solução para guardar os dados recebidos da API em cache.
-    - Atualização: Adicione uma solução para que o usuário consiga atualizar a lista de Pokémons, bem como sua lista de favoritos (Essa task requer Cache).
+---
 
-# Rubrica de Avaliação
+## Problema
 
-| Dimensão Avaliada                        | Peso  | Pontuação (1-5) | Descrição da Avaliação (O que procurar)                                                                                                                                                                                                 |
-|------------------------------------------|-------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **1. Funcionalidade (Requisitos Essenciais)** | 40%  | [1-5]           | **5 (Excelente):** Cumpriu 100% dos requisitos essenciais. A aplicação roda de primeira, sem bugs óbvios. Trata estados de loading/error.<br>**3 (Satisfatório):** Cumpriu a maioria (80%+) dos requisitos. Funcionalidade principal funciona, mas com bugs menores.<br>**1 (Inaceitável):** Não roda ou a funcionalidade principal está quebrada. O avaliador não consegue testar a solução. |
-| **2. Qualidade de Código e Estrutura**       | 25%  | [1-5]           | **5 (Excelente):** Código limpo, legível e idiomático. Segue princípios (ex: DRY). Estrutura de pastas lógica e escalável. Tipagem (TS) útil e precisa. Separação clara de responsabilidades.<br>**3 (Satisfatório):** Código funciona, mas com repetição ou "code smells". Estrutura de pastas aceitável, mas confusa. Tipagem usada com alguns `any`.<br>**1 (Inaceitável):** "Código espaguete". Variáveis ruins. Lógica de negócio misturada com UI. "Sopa de arquivos" na raiz. |
-| **3. Processo e Comunicação (Git & README)** | 25%  | [1-5]           | **5 (Excelente):** Commits atômicos, frequentes e bem descritos. PR bem escrito. README completo com setup e explicações de design.<br>**3 (Satisfatório):** Usa Git, mas commits grandes (ex: "implementa home e função de agendar tarefas e remove var desnecessária"). README mínimo com instruções básicas.<br>**1 (Inaceitável):** Um único commit ("final"). Nenhum README ou instruções. Demonstra falta de profissionalismo e comunicação. |
-| **4. Bônus e Resolução de Problemas**        | 10%  | [1-5]           | **5 (Excelente):** Implementou requisitos bônus funcionando. README explica como utilizar.<br>**3 (Satisfatório):** Tentou implementar bônus, mas não funcionou. README explica falha e plano.<br>**1 (Inaceitável):** Ignorou bônus ou implementou com falhas e sem explicação no README. |
+O desafio impunha restrições que, na prática, espelham limitações comuns em integrações com APIs de terceiros:
 
-## Instruções sobre "README-CANDIDATO" (Timebox 30min):
-Preencha este arquivo com informações claras e concisas, separadas pelas seguintes seções:
+**Antes / sem a solução estruturada:**
 
-#### Seção 1: Instruções para rodar
-- Quais variáveis de ambiente são necessárias?
-- Como instalar dependências?
-- Como rodar o projeto?
+- Dados de listagem **sem imagens** — apenas nome e URL de detalhe
+- Risco de acoplamento entre UI e chamadas HTTP
+- Ausência de tipagem consistente nas respostas da API
+- Necessidade de múltiplas telas (listagem, detalhe, favoritos) com estado compartilhado
+- Experiência prejudicada sem feedback de carregamento e sem persistência de preferências do usuário
+- Dificuldade de evoluir o código sem separação clara de responsabilidades
 
-#### Seção 2: Decisões de design
-- Por que você escolheu essa estrutura de pastas?
-- Qual foi a maior dificuldade que você encontrou e como superou?
-- O que você não teve tempo de fazer (dentro do timebox) e como você faria se tivesse mais tempo?
+---
 
-#### Seção 3: Link para Deploy (Bônus)
-- Cole aqui o link do projeto hospedado.
+## Solução
 
-#### Seção final: Recomendações
-- Escreva aqui dicas, melhorias e recomendações sobre este desafio.
+Foi desenvolvida uma **Single Page Application (SPA)** responsiva, organizada em camadas e integrada à PokéAPI.
 
-## Considerações finais:
-Este desafio não foi pensado para encontrar quem o finaliza 100% ou quem o termina mais rápido. Estamos buscando um desenvolvedor sério, que saiba como desenvolver soluções mesmo que para apenas 50% do projeto. Não queremos nenhum dev que dependa 100% de IA ou de terceiros, mas sim aquele que sabe priorizar, desenvolver e pesquisar.
+**Ao utilizar a aplicação:**
+
+- A listagem dos 151 Pokémon é carregada via `GET /pokemon?limit=151`
+- Cada card exibe **nome e imagem oficial**, mesmo quando a API de listagem não fornece o sprite
+- O clique em um card abre a ficha completa em `/pokemon/:id`, com nova requisição de detalhes
+- O usuário pode **filtrar por nome** em tempo real, sem novas chamadas à API
+- É possível montar um **time de até 6 favoritos**, com persistência entre sessões
+- Estados de carregamento, listas vazias e feedback visual orientam o uso da interface
+
+**Deploy para avaliação:** [https://product-showcase-kappa-lake.vercel.app/](https://product-showcase-kappa-lake.vercel.app/)
+
+---
+
+## Integração com a PokéAPI
+
+A aplicação consome a API pública da PokéAPI (REST, sem autenticação). O acesso HTTP é centralizado em um cliente Axios configurável por variáveis de ambiente.
+
+**Base da API:**
+
+```
+https://pokeapi.co/api/v2/pokemon
+```
+
+**Endpoints utilizados:**
+
+| Operação | Endpoint | Finalidade |
+|----------|----------|------------|
+| Listagem | `GET /pokemon?limit=151` | Grid na página inicial |
+| Detalhe | `GET /pokemon/{id ou nome}` | Nome, tipos, altura e peso |
+
+**Tratamento de imagens**
+
+O endpoint de listagem retorna apenas `name` e `url`. Para garantir consistência visual:
+
+1. O **id** numérico é extraído do campo `url` da resposta;
+2. A imagem oficial é montada a partir de `VITE_IMAGE_URL` + `/{id}.png`, utilizando o repositório de sprites da PokéAPI no GitHub.
+
+Com isso:
+
+- Todos os cards exibem arte oficial padronizada
+- Não é necessária uma requisição extra por Pokémon apenas para obter a miniatura na listagem
+- A solução permanece desacoplada da estrutura interna da URL de detalhe da API
+
+**Normalização de medidas**
+
+A API retorna altura em decímetros e peso em hectogramas. Na interface, os valores são convertidos para **metros** e **quilogramas**, facilitando a leitura pelo usuário final.
+
+**Tipagem**
+
+Interfaces TypeScript (`PokemonList`, `PokemonItem`) documentam o contrato com a API e evitam o uso de `any` no fluxo principal de dados.
+
+---
+
+## Arquitetura
+
+A estrutura de pastas foi definida para facilitar manutenção, reduzir acoplamento e permitir evolução incremental:
+
+```
+src/
+├── components/   # Elementos de interface reutilizáveis
+├── contexts/     # Estado global (favoritos, notificações)
+├── pages/        # Composição das rotas
+├── services/     # Comunicação com a API
+├── types/        # Contratos TypeScript
+└── utils/        # Regras auxiliares (imagem, tipos, formatação)
+```
+
+**Maior dificuldade enfrentada**
+
+Garantir que os favoritos permanecessem consistentes após recarregar a página e ao navegar entre rotas. A abordagem adotada combina **Context API** (estado reativo na interface) com **localStorage** (persistência local), sincronizando ambos a cada inclusão ou remoção.
+
+---
+
+## Funcionalidades
+
+| Rota | Descrição |
+|------|-----------|
+| `/` | Listagem em grid responsivo, busca por nome e indicador de carregamento |
+| `/pokemon/:id` | Ficha com imagem oficial, tipos coloridos, altura e peso |
+| `/favoritos` | Time de até 6 Pokémon salvos pelo usuário |
+
+**Recursos adicionais (bônus do desafio):**
+
+- Filtro client-side por nome, com contagem de resultados
+- Sistema de favoritos via Context API, com limite de 6 e página dedicada
+- Persistência dos favoritos em `localStorage`
+- Notificações de feedback ao favoritar ou remover
+- Hospedagem estática na Vercel
+
+---
+
+## Tecnologias
+
+- React 19 e TypeScript
+- Vite
+- Axios
+- React Router DOM
+- Tailwind CSS
+- PokéAPI
+- localStorage (persistência de favoritos)
+- Vercel (deploy)
+
+---
+
+## Como executar
+
+### Variáveis de ambiente
+
+Crie o arquivo `ProductShowcase/.env`:
+
+```env
+VITE_API_URL=https://pokeapi.co/api/v2/pokemon
+VITE_IMAGE_URL=https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork
+```
+
+### Comandos
+
+```bash
+cd ProductShowcase
+npm install
+npm run dev
+```
+
+Build de produção: `npm run build`  
+Pré-visualização do build: `npm run preview`
+
+---
+
+## Resultados
+
+- Aplicação funcional com **listagem, detalhes e favoritos** em rotas distintas
+- Integração estável com API externa, com serviço HTTP isolado e dados tipados
+- Interface responsiva, com estados de carregamento e mensagens para busca vazia
+- Time de favoritos persistido entre sessões, sem perda ao recarregar a página
+- Solução publicada e acessível para avaliação sem necessidade de ambiente local
+
+---
+
+## Evoluções previstas
+
+Com mais tempo de desenvolvimento, as próximas melhorias seriam:
+
+- Cache das respostas da API e opção de atualização manual da listagem
+- Skeletons de carregamento e refinamento de animações
+- Tratamento explícito de erros (API indisponível, recurso inexistente)
+- Filtros avançados por tipo, peso e altura
+- Testes automatizados nos serviços e utilitários
+
+---
+
+## Observação
+
+Este repositório documenta uma solução desenvolvida no contexto de um **desafio técnico front-end**, com foco no problema proposto, na abordagem de integração com API externa, nas decisões de arquitetura e no resultado entregue — incluindo deploy público para demonstração.
